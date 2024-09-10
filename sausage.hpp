@@ -12,16 +12,15 @@ namespace sausage
     {
 
     public:
-        virtual T value() const = 0;
-        virtual link<T>* next() const = 0;
+        virtual inline T value() const = 0;
+        virtual inline link<T>* next() const = 0;
 
-        virtual bool empty() const = 0;
         virtual size_t size() const = 0;
 
         virtual const link<T>* get(const size_t index) const = 0;
         virtual T get_value(const size_t index) const = 0;
 
-        void print() const
+        inline void print() const
         {
             print_to(std::cout);
         }
@@ -79,21 +78,16 @@ namespace sausage
             }
         }
         
-        T value() const override
+        inline T value() const override
         {
             return _value;
         }
 
-        link<T>* next() const override
+        inline link<T>* next() const override
         {
             return _next;
         }
         
-        bool empty() const override
-        {
-            return false;
-        }
-
         size_t size() const override
         {
             size_t result = 1;

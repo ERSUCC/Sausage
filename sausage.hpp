@@ -49,8 +49,6 @@ namespace sausage
             return values[0];
         }
 
-        virtual void print_to_internal(std::ostream& stream) const = 0;
-
     };
 
     template <typename T> class single_link : public link<T>
@@ -60,7 +58,7 @@ namespace sausage
         single_link(const T value) :
             _value(value), _next(nullptr) {}
 
-        single_link(const T value, single_link<T>* next) :
+        single_link(const T value, link<T>* next) :
             _value(value), _next(next) {}
         
         single_link(const T* values, const size_t length) :
@@ -98,12 +96,18 @@ namespace sausage
 
         size_t size() const override
         {
-            if (_next)
+            size_t result = 1;
+
+            const link<T>* current = _next;
+
+            while (current)
             {
-                return 1 + _next->size();
+                result++;
+
+                current = current->next();
             }
 
-            return 1;
+            return result;
         }
 
         const link<T>* get(const size_t index) const override
@@ -144,28 +148,22 @@ namespace sausage
         {
             stream << "( " << _value;
 
-            if (_next)
+            const link<T>* current = _next;
+
+            while (current)
             {
-                _next->print_to_internal(stream);
+                stream << " -> " << current->value();
+
+                current = current->next();
             }
 
             stream << " )";
         }
 
     protected:
-        void print_to_internal(std::ostream& stream) const override
-        {
-            stream << " -> " << _value;
-
-            if (_next)
-            {
-                _next->print_to_internal(stream);
-            }
-        }
-    
         const T _value;
 
-        single_link<T>* _next;
+        link<T>* _next;
 
     };
 }
